@@ -17,11 +17,13 @@ RocketChat.models.Subscriptions.updateDesktopNotificationsById = function(_id, d
 		_id: _id
 	};
 
-	const update = {
-		$set: {
-			desktopNotifications: desktopNotifications
-		}
-	};
+	const update = {};
+
+	if (desktopNotifications === 'default') {
+		update.$unset = { desktopNotifications: 1 };
+	} else {
+		update.$set = { desktopNotifications: desktopNotifications };
+	}
 
 	return this.update(query, update);
 };
@@ -45,11 +47,13 @@ RocketChat.models.Subscriptions.updateMobilePushNotificationsById = function(_id
 		_id: _id
 	};
 
-	const update = {
-		$set: {
-			mobilePushNotifications: mobilePushNotifications
-		}
-	};
+	const update = {};
+
+	if (mobilePushNotifications === 'default') {
+		update.$unset = { mobilePushNotifications: 1 };
+	} else {
+		update.$set = { mobilePushNotifications: mobilePushNotifications };
+	}
 
 	return this.update(query, update);
 };
@@ -118,19 +122,22 @@ RocketChat.models.Subscriptions.findDontNotifyMobileUsersByRoomId = function(roo
 	return this.find(query);
 };
 
-RocketChat.models.Subscriptions.findNotificationPreferencesByRoom = function(roomId) {
+RocketChat.models.Subscriptions.findNotificationPreferencesByRoom = function(roomId, explicit) {
 	const query = {
 		rid: roomId,
-		'u._id': {$exists: true},
-		$or: [
+		'u._id': {$exists: true}
+	};
+
+	if (explicit) {
+		query.$or = [
 			{audioNotification: {$exists: true}},
 			{desktopNotifications: {$exists: true}},
 			{desktopNotificationDuration: {$exists: true}},
 			{mobilePushNotifications: {$exists: true}}
-		]
-	};
+		];
+	}
 
-	return this.find(query);
+	return this.find(query, { fields: { 'u._id': 1, desktopNotificationDuration: 1, desktopNotifications: 1, mobilePushNotifications: 1 } });
 };
 
 RocketChat.models.Subscriptions.findWithSendEmailByRoomId = function(roomId) {
