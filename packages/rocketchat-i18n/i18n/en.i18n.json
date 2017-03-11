@@ -1058,6 +1058,7 @@
   "Notification_Desktop_Default_For" : "Show Desktop Notifications For",
   "Notification_Mobile_Default_For" : "Push Mobile Notifications For",
   "Notification_Duration": "Notification Duration",
+  "Notification_Warning_Avoid_Flood": "Please check your Push Mobile and Email Notifications to avoid flood",
   "Notifications": "Notifications",
   "Notifications_Max_Room_Members" : "Max room members before disabling all message notifications",
   "Notifications_Max_Room_Members_Description" : "Max number of members in room when notifications for all messages gets disabled. Users can still change per room setting to receive all notifications on an individual basis. (0 to disable)",

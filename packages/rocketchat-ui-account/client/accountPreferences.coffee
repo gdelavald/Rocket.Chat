@@ -55,7 +55,7 @@ Template.accountPreferences.onCreated ->
 
 	@useEmojis = new ReactiveVar not Meteor.user()?.settings?.preferences?.useEmojis? or Meteor.user().settings.preferences.useEmojis
 	instance = @
-	@autorun ->
+	@autorun  ->
 		if instance.useEmojis.get()
 			Tracker.afterFlush ->
 				$('#convertAsciiEmoji').show()
@@ -65,6 +65,10 @@ Template.accountPreferences.onCreated ->
 
 	@clearForm = ->
 		@find('#language').value = localStorage.getItem('userLanguage')
+
+	@warnUserAboutNotificationsFlood = (data) ->
+		if data.mobileNotifications isnt 'nothing' and data.emailNotificationMode isnt 'disabled'
+			toastr.info t('Notification_Warning_Avoid_Flood')
 
 	@save = ->
 		instance = @
@@ -103,6 +107,7 @@ Template.accountPreferences.onCreated ->
 		Meteor.call 'saveUserPreferences', data, (error, results) ->
 			if results
 				toastr.success t('Preferences_saved')
+				instance.warnUserAboutNotificationsFlood(data)
 				instance.clearForm()
 				if reload
 					setTimeout ->

@@ -194,9 +194,6 @@ Template.pushNotificationsFlexTab.onCreated(function() {
 				} else {
 					this.editing.set();
 				}
-				if(field === 'mobilePushNotifications' && value !== 'nothing') {
-					toastr.info('Maybe change email configs?');
-				}
 			});
 		}
 	};
